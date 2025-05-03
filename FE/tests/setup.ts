@@ -1,0 +1,21 @@
+// This file will be automatically loaded by Playwright
+import { expect } from "@playwright/test"
+
+// Add custom matchers if needed
+expect.extend({
+  // Example custom matcher
+  toBeWithinRange(received, floor, ceiling) {
+    const pass = received >= floor && received <= ceiling
+    if (pass) {
+      return {
+        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,
+        pass: true,
+      }
+    } else {
+      return {
+        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,
+        pass: false,
+      }
+    }
+  },
+})
