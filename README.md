@@ -21,3 +21,10 @@ Esta primera entrega se enfoca en implementar un CRUD básico para las funcional
   ## Requisitos Previos
     Node.js (v14 o superior)
     MongoDB
+  ## Levantamineto del Backend
+  ## Levantamiento del Frontend
+    cd FE #Moverse a la carpeta de Frontend
+    yarn install
+    yarn dev
+    
+    
