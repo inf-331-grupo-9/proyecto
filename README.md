@@ -18,6 +18,7 @@ Esta primera entrega se enfoca en implementar un CRUD básico para las funcional
 *CI/CD:* GitHub Actions
 
 # Instalación
+
   ## Requisitos Previos
     Node.js (v14 o superior)
     MongoDB
@@ -33,5 +34,6 @@ Esta primera entrega se enfoca en implementar un CRUD básico para las funcional
     cd FE #Moverse a la carpeta de Frontend
     yarn install
     yarn dev
-    
+# Tutorial de instalacion
+  https://youtu.be/r1T_bT_pjeA
     
