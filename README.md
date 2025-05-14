@@ -37,3 +37,5 @@ Esta primera entrega se enfoca en implementar un CRUD básico para las funcional
 # Tutorial de instalacion
   https://youtu.be/r1T_bT_pjeA
     
+# Licencia
+Este proyecto está bajo la [MIT License](./LICENSE)
