@@ -31,7 +31,7 @@ export function Marathons() {
         setFilteredMarathons(data)
         setIsLoading(false)
       } catch (error) {
-        console.error("Failed to fetch marathons:", error)
+        console.error("Failed to fetch races:", error)
         setIsLoading(false)
       }
     }
@@ -83,7 +83,7 @@ export function Marathons() {
   }
 
   if (isLoading) {
-    return <div className="text-center py-10">Loading marathons...</div>
+    return <div className="text-center py-10">Loading races...</div>
   }
 
   return (
