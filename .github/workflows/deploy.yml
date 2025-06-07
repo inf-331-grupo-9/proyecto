@@ -1,0 +1,48 @@
+name: Deploy a Azure VM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy to Azure VM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📂 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 🔐 Establecer clave SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: 🚀 Deploy via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no azureuser@${{ secrets.VM_PUBLIC_IP }} << 'EOF'
+            echo "📁 Cambiando a la carpeta del proyecto"
+            cd ${{ secrets.PROJECT_PATH }}
+
+            echo "🔄 Resguardando archivo .env si existe"
+            mv BE/.env ../.env.bak
+
+            echo "🔁 Revirtiendo cambios y haciendo git pull"
+            git reset --hard
+            git pull origin master
+
+            echo "♻️ Restaurando archivo .env si existía"
+            mv ../.env.bak BE/.env
+
+            echo "📦 Instalando dependencias y reiniciando backend"
+            cd BE
+            npm install
+            npm install dotenv
+            pm2 restart backend || pm2 start npm --name backend -- run dev
+
+            echo "🧱 Instalando dependencias y reiniciando frontend"
+            cd ../FE
+            npm install --force
+            pm2 restart frontend || pm2 start npm --name frontend -- run dev
+          EOF
