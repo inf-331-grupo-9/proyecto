@@ -91,18 +91,18 @@ export function Marathons() {
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search marathons..." value={searchQuery} onChange={handleSearch} className="pl-8" />
+          <Input placeholder="Search races..." value={searchQuery} onChange={handleSearch} className="pl-8" />
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Marathon
+              Add Race
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
-              <DialogTitle>Add New Marathon</DialogTitle>
+              <DialogTitle>Add New Race</DialogTitle>
             </DialogHeader>
             <MarathonForm onSuccess={handleAddSuccess} />
           </DialogContent>
@@ -111,7 +111,7 @@ export function Marathons() {
 
       {filteredMarathons.length === 0 ? (
         <div className="text-center py-10 border rounded-md">
-          <p className="text-muted-foreground">No marathons found</p>
+          <p className="text-muted-foreground">No races found</p>
         </div>
       ) : (
         <div className="border rounded-md">
@@ -158,7 +158,7 @@ export function Marathons() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
-            <DialogTitle>Edit Marathon</DialogTitle>
+            <DialogTitle>Edit Race</DialogTitle>
           </DialogHeader>
           {selectedMarathon && <MarathonForm marathon={selectedMarathon} onSuccess={handleEditSuccess} />}
         </DialogContent>
