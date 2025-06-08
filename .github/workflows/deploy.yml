@@ -46,3 +46,25 @@ jobs:
             npm install --force
             pm2 restart frontend || pm2 start npm --name frontend -- run dev
           EOF
+
+      - name: ✅ Notificación Slack si éxito
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":white_check_mark: *Despliegue exitoso* del proyecto `${{ github.repository }}` en commit `${{ github.sha }}` por `${{ github.actor }}`"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: ❌ Notificación Slack si falla
+        if: failure()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":x: *Falló el despliegue* del proyecto `${{ github.repository }}` en commit `${{ github.sha }}` por `${{ github.actor }}`"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
