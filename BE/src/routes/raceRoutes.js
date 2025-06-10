@@ -4,7 +4,6 @@ const raceData = require('../handlers/raceHandlers');
 
 router.get('/data', async (req, res) => {
   const races = await raceData.getAllRaces();
-  console.log(JSON.stringify(races));
   res.json(races);
 });
 

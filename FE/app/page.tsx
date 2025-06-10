@@ -1,10 +1,14 @@
-import { Marathons } from "@/components/marathons"
+import { Marathons } from "@/components/marathons";
+import { AuthGuard } from "@/components/auth-guard";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
-    <main className="container mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6">Runtrack</h1>
-      <Marathons />
-    </main>
-  )
+    <AuthGuard>
+      <Navbar />
+      <main className="container mx-auto py-10 px-4">
+        <Marathons />
+      </main>
+    </AuthGuard>
+  );
 }
