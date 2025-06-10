@@ -1,17 +1,18 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react"
+import { Plus, Search, Pencil, Trash2, Eye, Filter, X } from "lucide-react"
 import { MarathonForm } from "./marathon-form"
 import { useRouter } from "next/navigation"
 import { fetchMarathons, deleteMarathon } from "@/lib/api"
 import type { Marathon } from "@/lib/types"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 export function Marathons() {
   const [marathons, setMarathons] = useState<Marathon[]>([])
@@ -21,12 +22,21 @@ export function Marathons() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedMarathon, setSelectedMarathon] = useState<Marathon | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [filters, setFilters] = useState({
+    location: "",
+    dateFrom: "",
+    dateTo: ""
+  })
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     const getMarathons = async () => {
       try {
-        const data = await fetchMarathons()
+        const data = await fetchMarathons({
+          name: searchQuery,
+          ...filters
+        })
         setMarathons(data)
         setFilteredMarathons(data)
         setIsLoading(false)
@@ -37,19 +47,23 @@ export function Marathons() {
     }
 
     getMarathons()
-  }, [])
-
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredMarathons(marathons)
-    } else {
-      const filtered = marathons.filter((marathon) => marathon.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      setFilteredMarathons(filtered)
-    }
-  }, [searchQuery, marathons])
+  }, [searchQuery, filters])
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
+  }
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFilters(prev => ({ ...prev, [name]: value }))
+  }
+
+  const resetFilters = () => {
+    setFilters({
+      location: "",
+      dateFrom: "",
+      dateTo: ""
+    })
   }
 
   const handleAddSuccess = (newMarathon: Marathon) => {
@@ -89,9 +103,70 @@ export function Marathons() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search races..." value={searchQuery} onChange={handleSearch} className="pl-8" />
+        <div className="flex gap-2 w-full">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search races..." 
+              value={searchQuery} 
+              onChange={handleSearch} 
+              className="pl-8" 
+            />
+          </div>
+          <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <Filter className="mr-2 h-4 w-4" />
+                Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input 
+                    id="location" 
+                    name="location" 
+                    value={filters.location} 
+                    onChange={handleFilterChange} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dateFrom">Date From</Label>
+                  <Input 
+                    id="dateFrom" 
+                    name="dateFrom" 
+                    type="date" 
+                    value={filters.dateFrom} 
+                    onChange={handleFilterChange} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dateTo">Date To</Label>
+                  <Input 
+                    id="dateTo" 
+                    name="dateTo" 
+                    type="date" 
+                    value={filters.dateTo} 
+                    onChange={handleFilterChange} 
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <Button 
+                    variant="ghost" 
+                    onClick={resetFilters}
+                    disabled={!filters.location && !filters.dateFrom && !filters.dateTo}
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Reset
+                  </Button>
+                  <Button onClick={() => setIsFilterOpen(false)}>
+                    Apply Filters
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
