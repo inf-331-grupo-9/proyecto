@@ -9,14 +9,13 @@ export async function fetchMarathons(params?: {
   dateTo?: string;
 }): Promise<Marathon[]> {
   const queryParams = new URLSearchParams();
-  
+
   if (params?.name) queryParams.append('name', params.name);
   if (params?.location) queryParams.append('location', params.location);
   if (params?.dateFrom) queryParams.append('dateFrom', params.dateFrom);
   if (params?.dateTo) queryParams.append('dateTo', params.dateTo);
 
-  const url = `${API_URL}/data?${queryParams.toString()}`;
-  const response = await fetch(url);
+  const response = await fetch(`${API_URL}?${queryParams.toString()}`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch marathons: ${response.status}`);
@@ -26,7 +25,7 @@ export async function fetchMarathons(params?: {
 }
 
 export async function fetchMarathon(id: string): Promise<Marathon> {
-  const response = await fetch(`${API_URL}/${id}`);
+  const response = await fetch(`${API_URL}/id/${id}`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch marathon: ${response.status}`);

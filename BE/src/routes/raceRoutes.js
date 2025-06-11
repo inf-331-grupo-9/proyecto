@@ -18,7 +18,6 @@ router.get('/data', async (req, res) => {
   res.json(races);
 });
 
-// Los demás endpoints permanecen igual
 router.get('/data/:id', async (req, res) => {
   const race = await raceData.getRaceById(req.params.id);
   race ? res.json(race) : res.status(404).send('Not found');

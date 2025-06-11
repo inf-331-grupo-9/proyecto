@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const fetchedData = await fetch("http://localhost:3001/races/data");
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const fetchedData = await fetch(`http://localhost:3001/races/data${url.search}`);
   const racesData = await fetchedData.json();
   return NextResponse.json(racesData);
 }

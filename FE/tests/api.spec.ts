@@ -20,14 +20,14 @@ test.describe("Marathon API", () => {
     expect(marathon).toHaveProperty("organizer");
   });
 
-  test("GET /api/marathons/:id should return a single marathon", async ({
+  test("GET /api/marathons/id/:id should return a single marathon", async ({
     request,
   }) => {
     const allResponse = await request.get("/api/marathons");
     const marathons = await allResponse.json();
     const id = marathons[0]._id;
 
-    const response = await request.get(`/api/marathons/${id}`);
+    const response = await request.get(`/api/marathons/id/${id}`);
 
     expect(response.status()).toBe(200);
 
@@ -68,7 +68,7 @@ test.describe("Marathon API", () => {
     );
   });
 
-  test("PUT /api/marathons/:id should update a marathon", async ({
+  test("PUT /api/marathons/id/:id should update a marathon", async ({
     request,
   }) => {
     const newMarathon = {
@@ -90,7 +90,7 @@ test.describe("Marathon API", () => {
     };
 
     const updateResponse = await request.put(
-      `/api/marathons/${createdMarathon._id}`,
+      `/api/marathons/id/${createdMarathon._id}`,
       { data: updatedData }
     );
 
@@ -105,7 +105,7 @@ test.describe("Marathon API", () => {
     );
   });
 
-  test("DELETE /api/marathons/:id should delete a marathon", async ({
+  test("DELETE /api/marathons/id/:id should delete a marathon", async ({
     request,
   }) => {
     const newMarathon = {
@@ -121,13 +121,13 @@ test.describe("Marathon API", () => {
     const createdMarathon = await createResponse.json();
 
     const deleteResponse = await request.delete(
-      `/api/marathons/${createdMarathon._id}`
+      `/api/marathons/id/${createdMarathon._id}`
     );
 
     expect(deleteResponse.status()).toBe(200);
 
     const getResponse = await request.get(
-      `/api/marathons/${createdMarathon._id}`
+      `/api/marathons/id/${createdMarathon._id}`
     );
     expect(getResponse.status()).toBe(500);
   });
