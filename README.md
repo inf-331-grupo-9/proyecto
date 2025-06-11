@@ -2,6 +2,12 @@
 # Resumen
 RunTrack es una plataforma web diseñada para corredores y organizadores de carreras. Su objetivo es simplificar la participación en eventos de running, permitiendo a los organizadores publicar carreras y a los corredores inscribirse, compartir resultados y valorar experiencias. 
 Esta primera entrega se enfoca en implementar un CRUD básico para las funcionalidades principales.
+
+# Integrantes del equipo:
+- Bastián Gaete - [GitHub](https://github.com/bastiangaetea)
+- Simon Appel - [GitHub](https://github.com/SimonAppel)
+- Jose Guerrero - [GitHub](https://github.com/JoseGuerrero16)
+
 # Tecnologías Usadas
 *Frontend:* NextJS
 
