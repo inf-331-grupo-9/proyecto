@@ -3,7 +3,18 @@ const router = express.Router();
 const raceData = require('../handlers/raceHandlers');
 
 router.get('/data', async (req, res) => {
-  const races = await raceData.getAllRaces();
+  const { name, location, dateFrom, dateTo } = req.query;
+  const query = {};
+  
+  if (name) query.name = new RegExp(name, 'i');
+  if (location) query.location = new RegExp(location, 'i');
+  if (dateFrom || dateTo) {
+    query.date = {};
+    if (dateFrom) query.date.$gte = dateFrom;
+    if (dateTo) query.date.$lte = dateTo;
+  }
+
+  const races = await raceData.getAllRaces(query);
   res.json(races);
 });
 
