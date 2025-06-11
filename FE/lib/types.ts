@@ -16,3 +16,10 @@ export interface MarathonInput {
   description?: string
   link?: string
 }
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  password: string
+}
