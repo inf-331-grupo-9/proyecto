@@ -19,8 +19,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Search, Pencil, Trash2, Eye, Filter, X } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Eye, Filter, X, Star } from "lucide-react";
 import { MarathonForm } from "./marathon-form";
+import { RatingDialog } from "./rating-dialog";
+import { StarRating } from "@/components/ui/star-rating";
 import { useRouter } from "next/navigation";
 import { fetchMarathons, deleteMarathon } from "@/lib/api";
 import type { Marathon } from "@/lib/types";
@@ -48,6 +50,9 @@ export function Marathons() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
+  
+  // For demo purposes, using a fixed userId. In a real app, this would come from auth context
+  const userId = "demo-user-123";
 
   useEffect(() => {
     const getMarathons = async () => {
@@ -99,6 +104,23 @@ export function Marathons() {
       )
     );
     setIsEditDialogOpen(false);
+  };
+
+  const handleRatingChange = () => {
+    // Refresh marathons to get updated ratings
+    const getMarathons = async () => {
+      try {
+        const data = await fetchMarathons({
+          name: searchQuery,
+          ...filters,
+        });
+        setMarathons(data);
+        setFilteredMarathons(data);
+      } catch (error) {
+        console.error("Failed to fetch races:", error);
+      }
+    };
+    getMarathons();
   };
 
   const handleEdit = (marathon: Marathon) => {
@@ -224,6 +246,7 @@ export function Marathons() {
                 <TableHead>Date</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Organizer</TableHead>
+                <TableHead>Rating</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -234,6 +257,26 @@ export function Marathons() {
                   <TableCell>{marathon.date}</TableCell>
                   <TableCell>{marathon.location}</TableCell>
                   <TableCell>{marathon.organizer}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <StarRating
+                        rating={marathon.rating?.average || 0}
+                        showCount={true}
+                        count={marathon.rating?.count || 0}
+                        size="sm"
+                      />
+                      <RatingDialog
+                        marathon={marathon}
+                        userId={userId}
+                        onRatingChange={handleRatingChange}
+                        trigger={
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                            <Star className="h-3 w-3" />
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button

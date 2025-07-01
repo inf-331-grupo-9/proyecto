@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { StarRating } from "@/components/ui/star-rating"
+import { RatingDialog } from "@/components/rating-dialog"
+import { ReviewSection } from "@/components/review-section"
 import { fetchMarathon } from "@/lib/api"
 import type { Marathon } from "@/lib/types"
-import { ArrowLeft, Calendar, MapPin, User, LinkIcon } from "lucide-react"
+import { ArrowLeft, Calendar, MapPin, User, LinkIcon, Star } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -13,6 +16,10 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
   const [marathon, setMarathon] = useState<Marathon | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // For demo purposes, using a fixed userId. In a real app, this would come from auth context
+  const userId = "demo-user-123"
+  const userName = "Demo User"
 
   useEffect(() => {
     const getMarathonDetails = async () => {
@@ -83,7 +90,29 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
 
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl md:text-3xl">{marathon.name}</CardTitle>
+          <div className="flex justify-between items-start">
+            <CardTitle className="text-2xl md:text-3xl">{marathon.name}</CardTitle>
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <StarRating
+                  rating={marathon.rating?.average || 0}
+                  showCount={true}
+                  count={marathon.rating?.count || 0}
+                  size="lg"
+                />
+                <RatingDialog
+                  marathon={marathon}
+                  userId={userId}
+                  trigger={
+                    <Button variant="outline" size="sm" className="mt-2">
+                      <Star className="h-4 w-4 mr-2" />
+                      Rate this marathon
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="aspect-video relative rounded-md overflow-hidden">
@@ -130,6 +159,13 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
           </div>
         </CardContent>
       </Card>
+
+      {/* Review Section */}
+      <ReviewSection 
+        raceId={marathon._id} 
+        userId={userId} 
+        userName={userName} 
+      />
     </div>
   )
 }
