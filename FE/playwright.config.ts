@@ -7,7 +7,7 @@ export default defineConfig({
   workers: 1,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "https://grupo9-proyecto.eastus.cloudapp.azure.com",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -17,8 +17,4 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
-  webServer: {
-    command: "yarn dev",
-    url: "http://localhost:3000",
-  },
 });
