@@ -80,7 +80,7 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
   if (isLoading) {
     return (
       <div className="container mx-auto py-10 px-4">
-        <div className="text-center py-10">Loading marathon details...</div>
+        <div className="text-center py-10">Cargando detalles de la maratón...</div>
       </div>
     )
   }
@@ -93,7 +93,7 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
           <Link href="/">
             <Button variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Marathons
+              Volver a las Maratones
             </Button>
           </Link>
         </div>
@@ -104,12 +104,12 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
   if (!marathon) {
     return (
       <div className="container mx-auto py-10 px-4">
-        <div className="text-center py-10">Marathon not found</div>
+        <div className="text-center py-10">Maratón no encontrada</div>
         <div className="flex justify-center">
           <Link href="/">
             <Button variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Marathons
+              Volver a las Maratones
             </Button>
           </Link>
         </div>
@@ -123,7 +123,7 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
         <Link href="/">
           <Button variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Marathons
+            Volver a las Maratones
           </Button>
         </Link>
       </div>
@@ -148,7 +148,7 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
                     trigger={
                       <Button variant="outline" size="sm" className="mt-2">
                         <Star className="h-4 w-4 mr-2" />
-                        Rate this marathon
+                        Calificar esta maratón
                       </Button>
                     }
                   />
@@ -166,30 +166,30 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Date:</span> {marathon.date}
+                <span className="font-medium">Fecha:</span> {marathon.date}
               </div>
 
               <div className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Location:</span> {marathon.location}
+                <span className="font-medium">Ubicación:</span> {marathon.location}
               </div>
 
               <div className="flex items-center gap-2">
                 <User className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Organizer:</span> {marathon.organizer}
+                <span className="font-medium">Organizador:</span> {marathon.organizer}
               </div>
 
               {marathon.link && (
                 <div className="flex items-center gap-2">
                   <LinkIcon className="h-5 w-5 text-muted-foreground" />
-                  <span className="font-medium">Website:</span>
+                  <span className="font-medium">Sitio Web:</span>
                   <a
                     href={marathon.link.startsWith("http") ? marathon.link : `https://${marathon.link}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
                   >
-                    Visit website
+                    Visitar sitio web
                   </a>
                 </div>
               )}
@@ -203,11 +203,11 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
                       disabled={isApplying}
                       className="w-full"
                     >
-                      {isApplying ? "Applying..." : "Apply to Race"}
+                      {isApplying ? "Aplicando..." : "Aplicar a la Carrera"}
                     </Button>
                   ) : (
                     <Button variant="outline" disabled className="w-full">
-                      Already Applied
+                      Ya Aplicado
                     </Button>
                   )}
                 </div>
@@ -215,8 +215,8 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
             </div>
 
             <div>
-              <h3 className="text-lg font-medium mb-2">Description</h3>
-              <p className="text-muted-foreground">{marathon.description || "No description available."}</p>
+              <h3 className="text-lg font-medium mb-2">Descripción</h3>
+              <p className="text-muted-foreground">{marathon.description || "No hay descripción disponible."}</p>
             </div>
           </div>
         </CardContent>

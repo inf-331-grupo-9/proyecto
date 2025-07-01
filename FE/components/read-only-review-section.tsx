@@ -28,7 +28,7 @@ export function ReadOnlyReviewSection({ raceId }: { raceId: string }) {
     return (
       <Card className="mt-6">
         <CardContent className="py-6">
-          <div className="text-center">Loading reviews...</div>
+          <div className="text-center">Cargando reseñas...</div>
         </CardContent>
       </Card>
     );
@@ -39,13 +39,13 @@ export function ReadOnlyReviewSection({ raceId }: { raceId: string }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
-          Reviews ({reviews.length})
+          Reseñas ({reviews.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {reviews.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
-            No reviews yet.
+            Aún no hay reseñas.
           </div>
         ) : (
           reviews.map((review) => (

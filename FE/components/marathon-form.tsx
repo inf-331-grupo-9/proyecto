@@ -47,19 +47,19 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+      newErrors.name = "El nombre es requerido";
     }
 
     if (!formData.date.trim()) {
-      newErrors.date = "Date is required";
+      newErrors.date = "La fecha es requerida";
     }
 
     if (!formData.location.trim()) {
-      newErrors.location = "Location is required";
+      newErrors.location = "La ubicación es requerida";
     }
 
     if (!formData.organizer.trim()) {
-      newErrors.organizer = "Organizer is required";
+      newErrors.organizer = "El organizador es requerido";
     }
 
     setErrors(newErrors);
@@ -109,7 +109,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4 py-4">
       <div className="space-y-2">
         <Label htmlFor="name">
-          Name <span className="text-red-500">*</span>
+          Nombre <span className="text-red-500">*</span>
         </Label>
         <Input
           id="name"
@@ -123,7 +123,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="date">
-          Date <span className="text-red-500">*</span>
+          Fecha <span className="text-red-500">*</span>
         </Label>
         <Input
           id="date"
@@ -138,7 +138,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="location">
-          Location <span className="text-red-500">*</span>
+          Ubicación <span className="text-red-500">*</span>
         </Label>
         <Input
           id="location"
@@ -154,7 +154,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="organizer">
-          Organizer <span className="text-red-500">*</span>
+          Organizador <span className="text-red-500">*</span>
         </Label>
         <Input
           id="organizer"
@@ -169,7 +169,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="link">Link</Label>
+        <Label htmlFor="link">Enlace</Label>
         <Input
           id="link"
           name="link"
@@ -179,7 +179,7 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Descripción</Label>
         <Textarea
           id="description"
           name="description"
@@ -192,10 +192,10 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
       <div className="flex justify-end gap-2 pt-2">
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
-            ? "Saving..."
+            ? "Guardando..."
             : marathon
-            ? "Update Marathon"
-            : "Add Marathon"}
+            ? "Actualizar Maratón"
+            : "Agregar Maratón"}
         </Button>
       </div>
     </form>

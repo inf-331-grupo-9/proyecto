@@ -83,9 +83,9 @@ export default function Dashboard() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'on-going': return 'On Going';
-      case 'cancelled': return 'Cancelled';
-      default: return 'On Going';
+      case 'on-going': return 'En Progreso';
+      case 'cancelled': return 'Cancelado';
+      default: return 'En Progreso';
     }
   };
 
@@ -94,7 +94,7 @@ export default function Dashboard() {
       <>
         <Navbar />
         <div className="container mx-auto py-10 px-4">
-          <div className="text-center py-10">Loading your applications...</div>
+          <div className="text-center py-10">Cargando tus aplicaciones...</div>
         </div>
       </>
     );
@@ -105,9 +105,9 @@ export default function Dashboard() {
       <Navbar />
       <div className="container mx-auto py-10 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Runner Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-2">Panel del Corredor</h1>
           <p className="text-muted-foreground">
-            Welcome back, {getUserName()}! Here are your race applications.
+            ¡Bienvenido de vuelta, {getUserName()}! Aquí están tus aplicaciones a carreras.
           </p>
         </div>
 
@@ -115,10 +115,10 @@ export default function Dashboard() {
           <Card>
             <CardContent className="text-center py-10">
               <p className="text-muted-foreground mb-4">
-                You haven't applied to any races yet.
+                Aún no te has aplicado a ninguna carrera.
               </p>
               <Link href="/">
-                <Button>Browse Races</Button>
+                <Button>Explorar Carreras</Button>
               </Link>
             </CardContent>
           </Card>
@@ -133,7 +133,7 @@ export default function Dashboard() {
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
-                          Applied {new Date(application.appliedAt).toLocaleDateString()}
+                          Aplicado {new Date(application.appliedAt).toLocaleDateString()}
                         </div>
                       </div>
                     </div>
@@ -145,13 +145,13 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="font-medium">Race ID: {application.raceId}</span>
+                      <span className="font-medium">ID de Carrera: {application.raceId}</span>
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/marathons/id/${application.raceId}`}>
                         <Button variant="outline" size="sm">
                           <Eye className="h-4 w-4 mr-2" />
-                          View Race
+                          Ver Carrera
                         </Button>
                       </Link>
                                           <Button
@@ -160,7 +160,7 @@ export default function Dashboard() {
                       onClick={() => handleWithdrawApplication(application.raceId)}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Withdraw
+                      Retirar
                     </Button>
                     </div>
                   </div>

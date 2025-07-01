@@ -28,7 +28,7 @@ export default function CreateRace() {
     e.preventDefault();
     
     if (!isAuthenticated() || !isEnterprise()) {
-      alert("Please log in as an enterprise user");
+      alert("Por favor inicia sesión como usuario empresarial");
       router.push('/auth/login');
       return;
     }
@@ -38,7 +38,7 @@ export default function CreateRace() {
       const userId = getUserId();
       
       if (!userId) {
-        alert("User not found. Please log in again.");
+        alert("Usuario no encontrado. Por favor inicia sesión nuevamente.");
         router.push('/auth/login');
         return;
       }
@@ -51,7 +51,7 @@ export default function CreateRace() {
       router.push('/enterprise/dashboard');
     } catch (error) {
       console.error("Failed to create race:", error);
-      alert("Failed to create race. Please try again.");
+      alert("Error al crear la carrera. Por favor intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
@@ -71,43 +71,43 @@ export default function CreateRace() {
         <Link href="/enterprise/dashboard">
           <Button variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Volver al Panel
           </Button>
         </Link>
       </div>
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl">Create New Race</CardTitle>
+          <CardTitle className="text-2xl">Crear Nueva Carrera</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Race Name *</Label>
+              <Label htmlFor="name">Nombre de la Carrera *</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="Enter race name"
+                placeholder="Ingresa el nombre de la carrera"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location *</Label>
+              <Label htmlFor="location">Ubicación *</Label>
               <Input
                 id="location"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
                 required
-                placeholder="Enter race location"
+                placeholder="Ingresa la ubicación de la carrera"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date">Date *</Label>
+              <Label htmlFor="date">Fecha *</Label>
               <Input
                 id="date"
                 name="date"
@@ -119,48 +119,48 @@ export default function CreateRace() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="organizer">Organizer *</Label>
+              <Label htmlFor="organizer">Organizador *</Label>
               <Input
                 id="organizer"
                 name="organizer"
                 value={formData.organizer}
                 onChange={handleChange}
                 required
-                placeholder="Enter organizer name"
+                placeholder="Ingresa el nombre del organizador"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Enter race description"
+                placeholder="Ingresa la descripción de la carrera"
                 rows={4}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="link">Website Link</Label>
+              <Label htmlFor="link">Enlace del Sitio Web</Label>
               <Input
                 id="link"
                 name="link"
                 type="url"
                 value={formData.link}
                 onChange={handleChange}
-                placeholder="https://example.com"
+                placeholder="https://ejemplo.com"
               />
             </div>
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="flex-1">
-                {isLoading ? "Creating..." : "Create Race"}
+                {isLoading ? "Creando..." : "Crear Carrera"}
               </Button>
               <Link href="/enterprise/dashboard" className="flex-1">
                 <Button type="button" variant="outline" className="w-full">
-                  Cancel
+                  Cancelar
                 </Button>
               </Link>
             </div>

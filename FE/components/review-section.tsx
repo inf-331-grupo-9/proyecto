@@ -113,19 +113,17 @@ export function ReviewSection({ raceId, userId, userName }: ReviewSectionProps) 
       .slice(0, 2);
   };
 
-
-
   return (
     <Card className="mt-6">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
-            Reviews ({reviews.length})
+            Reseñas ({reviews.length})
           </CardTitle>
           {!userReview && !isAddingReview && (
             <Button onClick={() => setIsAddingReview(true)} size="sm">
-              Write a Review
+              Escribir Reseña
             </Button>
           )}
         </div>
@@ -177,7 +175,7 @@ export function ReviewSection({ raceId, userId, userName }: ReviewSectionProps) 
                 {isAddingReview && (
                   <>
                     <Textarea
-                      placeholder="Share your experience with this marathon..."
+                      placeholder="Comparte tu experiencia con esta maratón..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       maxLength={500}
@@ -186,7 +184,7 @@ export function ReviewSection({ raceId, userId, userName }: ReviewSectionProps) 
                     />
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-muted-foreground">
-                        {comment.length}/500 characters
+                        {comment.length}/500 caracteres
                       </span>
                       <Button
                         onClick={handleSubmitReview}
@@ -194,7 +192,7 @@ export function ReviewSection({ raceId, userId, userName }: ReviewSectionProps) 
                         size="sm"
                       >
                         <Send className="h-4 w-4 mr-2" />
-                        {isLoading ? "Saving..." : userReview ? "Update Review" : "Post Review"}
+                        {isLoading ? "Guardando..." : userReview ? "Actualizar Reseña" : "Publicar Reseña"}
                       </Button>
                     </div>
                   </>
@@ -210,56 +208,34 @@ export function ReviewSection({ raceId, userId, userName }: ReviewSectionProps) 
         )}
 
         {/* Reviews List */}
-        {isLoadingReviews ? (
-          <div className="text-center py-4">Loading reviews...</div>
-        ) : reviews.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>No reviews yet. Be the first to share your experience!</p>
-          </div>
-        ) : (
+        {reviews.length > 0 && (
           <div className="space-y-4">
             {reviews.map((review) => (
-              <div key={review._id} className="flex items-start gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>{getInitials(review.userName)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="font-medium text-sm">{review.userName}</span>
-                      <span className="text-xs text-muted-foreground ml-2">
-                        {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
-                      </span>
-                    </div>
-                    {review.userId === userId && (
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setUserReview(review);
-                            setComment(review.comment);
-                            setIsAddingReview(true);
-                          }}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleDeleteReview}
-                          disabled={isLoading}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
+              <div key={review._id} className="border rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>{getInitials(review.userName)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="font-medium text-sm">{review.userName}</span>
+                        <span className="text-xs text-muted-foreground ml-2">
+                          {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
+                        </span>
                       </div>
-                    )}
+                    </div>
+                    <p className="text-sm mt-1">{review.comment}</p>
                   </div>
-                  <p className="text-sm mt-1">{review.comment}</p>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {!isLoadingReviews && reviews.length === 0 && !userReview && !isAddingReview && (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No hay reseñas aún. ¡Sé el primero en escribir una!</p>
           </div>
         )}
       </CardContent>

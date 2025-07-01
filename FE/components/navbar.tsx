@@ -56,7 +56,7 @@ export function Navbar() {
             <Link href="/">
               <Button variant="ghost" size="sm">
                 <Home className="mr-2 h-4 w-4" />
-                Races
+                Carreras
               </Button>
             </Link>
             {/* Always show My Applications for runners */}
@@ -64,7 +64,7 @@ export function Navbar() {
               <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
                   <User className="mr-2 h-4 w-4" />
-                  My Applications
+                  Mis Aplicaciones
                 </Button>
               </Link>
             )}
@@ -72,7 +72,7 @@ export function Navbar() {
               <Link href="/enterprise/dashboard">
                 <Button variant="ghost" size="sm">
                   <Building className="mr-2 h-4 w-4" />
-                  Dashboard
+                  Panel
                 </Button>
               </Link>
             )}
@@ -102,7 +102,7 @@ export function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard">
                     <User className="mr-2 h-4 w-4" />
-                    <span>My Applications</span>
+                    <span>Mis Aplicaciones</span>
                   </Link>
                 </DropdownMenuItem>
               )}
@@ -111,13 +111,13 @@ export function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link href="/enterprise/dashboard">
                       <Building className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
+                      <span>Panel</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/enterprise/races/create">
                       <FileText className="mr-2 h-4 w-4" />
-                      <span>Create Race</span>
+                      <span>Crear Carrera</span>
                     </Link>
                   </DropdownMenuItem>
                 </>
@@ -125,7 +125,7 @@ export function Navbar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <span>Cerrar Sesión</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
