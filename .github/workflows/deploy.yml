@@ -68,3 +68,53 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  playwright-tests:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: 📂 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⏳ Esperar que la app esté disponible
+        run: |
+          until curl -s --head https://${{ secrets.VM_PUBLIC_IP }} | grep "200 OK"; do
+            echo "Esperando que la app esté lista..."
+            sleep 5
+          done
+
+      - name: 📦 Instalar dependencias del frontend
+        working-directory: FE
+        run: |
+          npm ci
+          npx playwright install
+
+      - name: 🚀 Ejecutar pruebas Playwright (login + home)
+        working-directory: FE
+        run: |
+          TS_NODE_PROJECT=playwright.tsconfig.json npx playwright test tests/login.spec.ts
+          TS_NODE_PROJECT=playwright.tsconfig.json npx playwright test tests/home.spec.ts
+
+      - name: ✅ Notificación Slack si éxito
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":test_tube: *Pruebas Playwright exitosas* en `${{ github.repository }}` tras el despliegue."
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: ❌ Notificación Slack si falla
+        if: failure()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":x: *Fallaron las pruebas Playwright* en `${{ github.repository }}` tras el despliegue."
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
