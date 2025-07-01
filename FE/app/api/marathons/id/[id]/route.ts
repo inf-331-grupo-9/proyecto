@@ -5,7 +5,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  const fetchedData = await fetch(`http://localhost:3001/races/data/${id}`);
+      const fetchedData = await fetch(`http://localhost:3001/races/data/${id}`);
   const racesData = await fetchedData.json();
 
   if (!racesData) {
@@ -42,12 +42,7 @@ export async function PUT(
 
     const updatedMarathon = {
       ...racesData,
-      name: data.name,
-      location: data.location,
-      date: data.date,
-      organizer: data.organizer,
-      description: data.description || "",
-      link: data.link || "",
+      ...data,
     };
 
     const updatedData = await fetch(`http://localhost:3001/races/data/${id}`, {
@@ -73,13 +68,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const id = params.id;
+  const {id} = await params;
 
   const fetchedData = await fetch(`http://localhost:3001/races/data/${id}`, {
     method: "DELETE",
   });
-
-  console.log(fetchedData.status);
 
   if (fetchedData.status != 204) {
     return NextResponse.json({ error: "Marathon not found" }, { status: 404 });

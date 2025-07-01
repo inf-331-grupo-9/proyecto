@@ -24,14 +24,15 @@ import { MarathonForm } from "./marathon-form";
 import { RatingDialog } from "./rating-dialog";
 import { StarRating } from "@/components/ui/star-rating";
 import { useRouter } from "next/navigation";
-import { fetchMarathons, deleteMarathon } from "@/lib/api";
-import type { Marathon } from "@/lib/types";
+import { fetchMarathons, deleteMarathon, getEnterpriseMarathons, getUserApplications, applyToRace } from "@/lib/api";
+import type { Marathon, Application } from "@/lib/types";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getUserId, isEnterprise, isRunner, isAuthenticated, getUserName } from "@/lib/auth";
 
 export function Marathons() {
   const [marathons, setMarathons] = useState<Marathon[]>([]);
@@ -50,17 +51,28 @@ export function Marathons() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
+  const [userApplications, setUserApplications] = useState<Application[]>([]);
+  const [applyingRaceId, setApplyingRaceId] = useState<string | null>(null);
   
-  // For demo purposes, using a fixed userId. In a real app, this would come from auth context
-  const userId = "demo-user-123";
+  // Get actual user ID from authentication
+  const userId = getUserId();
 
   useEffect(() => {
     const getMarathons = async () => {
       try {
-        const data = await fetchMarathons({
-          name: searchQuery,
-          ...filters,
-        });
+        let data: Marathon[];
+        
+        // If user is enterprise, show only their races
+        if (isAuthenticated() && isEnterprise() && userId) {
+          data = await getEnterpriseMarathons(userId);
+        } else {
+          // For runners and unauthenticated users, show all races
+          data = await fetchMarathons({
+            name: searchQuery,
+            ...filters,
+          });
+        }
+        
         setMarathons(data);
         setFilteredMarathons(data);
         setIsLoading(false);
@@ -73,7 +85,22 @@ export function Marathons() {
     const debouncer = setTimeout(async () => await getMarathons(), 300);
 
     return () => clearTimeout(debouncer);
-  }, [searchQuery, filters]);
+  }, [searchQuery, filters, userId]);
+
+  useEffect(() => {
+    // Fetch user applications if runner
+    const fetchApplications = async () => {
+      if (isAuthenticated() && isRunner() && userId) {
+        try {
+          const apps = await getUserApplications(userId);
+          setUserApplications(apps);
+        } catch (e) {
+          setUserApplications([]);
+        }
+      }
+    };
+    fetchApplications();
+  }, [userId]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -110,10 +137,19 @@ export function Marathons() {
     // Refresh marathons to get updated ratings
     const getMarathons = async () => {
       try {
-        const data = await fetchMarathons({
-          name: searchQuery,
-          ...filters,
-        });
+        let data: Marathon[];
+        
+        // If user is enterprise, show only their races
+        if (isAuthenticated() && isEnterprise() && userId) {
+          data = await getEnterpriseMarathons(userId);
+        } else {
+          // For runners and unauthenticated users, show all races
+          data = await fetchMarathons({
+            name: searchQuery,
+            ...filters,
+          });
+        }
+        
         setMarathons(data);
         setFilteredMarathons(data);
       } catch (error) {
@@ -140,6 +176,28 @@ export function Marathons() {
       } catch (error) {
         console.error("Failed to delete marathon:", error);
       }
+    }
+  };
+
+  const hasApplied = (raceId: string) => {
+    return userApplications.some(app => app.raceId === raceId);
+  };
+
+  const handleApply = async (raceId: string) => {
+    if (!userId) return;
+    setApplyingRaceId(raceId);
+    try {
+      await applyToRace(raceId, {
+        runnerId: userId,
+        runnerName: getUserName() || "",
+      });
+      // Refresh applications
+      const apps = await getUserApplications(userId);
+      setUserApplications(apps);
+    } catch (e) {
+      // Optionally show error
+    } finally {
+      setApplyingRaceId(null);
     }
   };
 
@@ -217,20 +275,23 @@ export function Marathons() {
             </PopoverContent>
           </Popover>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Race
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[550px]">
-            <DialogHeader>
-              <DialogTitle>Add New Race</DialogTitle>
-            </DialogHeader>
-            <MarathonForm onSuccess={handleAddSuccess} />
-          </DialogContent>
-        </Dialog>
+        {/* Only show Add Race for enterprise users */}
+        {isAuthenticated() && isEnterprise() && (
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Race
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[550px]">
+              <DialogHeader>
+                <DialogTitle>Add New Race</DialogTitle>
+              </DialogHeader>
+              <MarathonForm onSuccess={handleAddSuccess} />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {filteredMarathons.length === 0 ? (
@@ -265,16 +326,19 @@ export function Marathons() {
                         count={marathon.rating?.count || 0}
                         size="sm"
                       />
-                      <RatingDialog
-                        marathon={marathon}
-                        userId={userId}
-                        onRatingChange={handleRatingChange}
-                        trigger={
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                            <Star className="h-3 w-3" />
-                          </Button>
-                        }
-                      />
+                      {/* Only show rating dialog for runners, not enterprise users */}
+                      {isAuthenticated() && isRunner() && userId && (
+                        <RatingDialog
+                          marathon={marathon}
+                          userId={userId || ''}
+                          onRatingChange={handleRatingChange}
+                          trigger={
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <Star className="h-3 w-3" />
+                            </Button>
+                          }
+                        />
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
@@ -289,22 +353,44 @@ export function Marathons() {
                         <Eye className="h-4 w-4" />
                         <span className="sr-only">View</span>
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleEdit(marathon)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleDelete(marathon._id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
+                      {/* Only show edit/delete for enterprise users and their own races */}
+                      {isAuthenticated() && isEnterprise() && userId && marathon.createdBy === userId && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit(marathon)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                            <span className="sr-only">Edit</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleDelete(marathon._id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Delete</span>
+                          </Button>
+                        </>
+                      )}
+                      {/* Show Apply button for runners who have not applied */}
+                      {isAuthenticated() && isRunner() && userId && !hasApplied(marathon._id) && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          disabled={applyingRaceId === marathon._id}
+                          onClick={() => handleApply(marathon._id)}
+                        >
+                          {applyingRaceId === marathon._id ? "Applying..." : "Apply"}
+                        </Button>
+                      )}
+                      {/* Optionally, show a disabled button if already applied */}
+                      {isAuthenticated() && isRunner() && userId && hasApplied(marathon._id) && (
+                        <Button variant="outline" size="sm" disabled>
+                          Applied
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

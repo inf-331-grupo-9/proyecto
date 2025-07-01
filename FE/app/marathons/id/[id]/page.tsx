@@ -6,20 +6,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StarRating } from "@/components/ui/star-rating"
 import { RatingDialog } from "@/components/rating-dialog"
 import { ReviewSection } from "@/components/review-section"
-import { fetchMarathon } from "@/lib/api"
-import type { Marathon } from "@/lib/types"
-import { ArrowLeft, Calendar, MapPin, User, LinkIcon, Star } from "lucide-react"
+import { fetchMarathon, getUserApplications, applyToRace, getRaceReviews } from "@/lib/api"
+import type { Marathon, Application, Review } from "@/lib/types"
+import { ArrowLeft, Calendar, MapPin, User, LinkIcon, Star, MessageSquare } from "lucide-react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import Image from "next/image"
+import { getUserId, isRunner, isEnterprise, isAuthenticated, getUserName } from "@/lib/auth"
+import { ReadOnlyReviewSection } from '@/components/read-only-review-section'
 
 export default function MarathonDetailPage({ params }: { params: { id: string } }) {
   const [marathon, setMarathon] = useState<Marathon | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [userApplications, setUserApplications] = useState<Application[]>([])
+  const [isApplying, setIsApplying] = useState(false)
   
-  // For demo purposes, using a fixed userId. In a real app, this would come from auth context
-  const userId = "demo-user-123"
-  const userName = "Demo User"
+  // Get actual user info from authentication
+  const userId = getUserId()
+  const userName = getUserName()
 
   useEffect(() => {
     const getMarathonDetails = async () => {
@@ -34,8 +40,42 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
       }
     }
 
+    const fetchUserApplications = async () => {
+      if (isAuthenticated() && isRunner() && userId) {
+        try {
+          const apps = await getUserApplications(userId)
+          setUserApplications(apps)
+        } catch (e) {
+          setUserApplications([])
+        }
+      }
+    }
+
     getMarathonDetails()
-  }, [params.id])
+    fetchUserApplications()
+  }, [params.id, userId])
+
+  const hasApplied = (raceId: string) => {
+    return userApplications.some(app => app.raceId === raceId)
+  }
+
+  const handleApply = async () => {
+    if (!userId || !marathon) return
+    setIsApplying(true)
+    try {
+      await applyToRace(marathon._id, {
+        runnerId: userId,
+        runnerName: userName || "",
+      })
+      // Refresh applications
+      const apps = await getUserApplications(userId)
+      setUserApplications(apps)
+    } catch (e) {
+      console.error("Failed to apply to race:", e)
+    } finally {
+      setIsApplying(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -100,16 +140,19 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
                   count={marathon.rating?.count || 0}
                   size="lg"
                 />
-                <RatingDialog
-                  marathon={marathon}
-                  userId={userId}
-                  trigger={
-                    <Button variant="outline" size="sm" className="mt-2">
-                      <Star className="h-4 w-4 mr-2" />
-                      Rate this marathon
-                    </Button>
-                  }
-                />
+                {/* Only show rating dialog for runners, not enterprise users */}
+                {isAuthenticated() && isRunner() && userId && (
+                  <RatingDialog
+                    marathon={marathon}
+                    userId={userId || ""}
+                    trigger={
+                      <Button variant="outline" size="sm" className="mt-2">
+                        <Star className="h-4 w-4 mr-2" />
+                        Rate this marathon
+                      </Button>
+                    }
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -150,6 +193,25 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
                   </a>
                 </div>
               )}
+
+              {/* Apply button for runners */}
+              {isAuthenticated() && isRunner() && userId && (
+                <div className="pt-4">
+                  {!hasApplied(marathon._id) ? (
+                    <Button 
+                      onClick={handleApply} 
+                      disabled={isApplying}
+                      className="w-full"
+                    >
+                      {isApplying ? "Applying..." : "Apply to Race"}
+                    </Button>
+                  ) : (
+                    <Button variant="outline" disabled className="w-full">
+                      Already Applied
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             <div>
@@ -160,12 +222,19 @@ export default function MarathonDetailPage({ params }: { params: { id: string } 
         </CardContent>
       </Card>
 
-      {/* Review Section */}
-      <ReviewSection 
-        raceId={marathon._id} 
-        userId={userId} 
-        userName={userName} 
-      />
+      {/* Review Section - Only show for runners and unauthenticated users */}
+      {(isAuthenticated() && isRunner() && userId) || !isAuthenticated() ? (
+        <ReviewSection 
+          raceId={marathon._id} 
+          userId={userId || ""} 
+          userName={userName || ""} 
+        />
+      ) : (
+        /* Show reviews in read-only mode for enterprise users */
+        isAuthenticated() && isEnterprise() && userId && (
+          <ReadOnlyReviewSection raceId={marathon._id} />
+        )
+      )}
     </div>
   )
 }

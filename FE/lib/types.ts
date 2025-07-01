@@ -10,6 +10,9 @@ export interface Marathon {
     average: number
     count: number
   }
+  createdBy?: string
+  createdAt?: string
+  status?: 'on-going' | 'cancelled'
 }
 
 export interface MarathonInput {
@@ -19,11 +22,26 @@ export interface MarathonInput {
   organizer: string
   description?: string
   link?: string
+  createdBy?: string
+  status?: 'on-going' | 'cancelled'
 }
 
 export interface User {
-  id: string
+  _id: string
   name: string
+  email: string
+  role: 'runner' | 'enterprise'
+  createdAt?: string
+}
+
+export interface UserInput {
+  name: string
+  email: string
+  password: string
+  role: 'runner' | 'enterprise'
+}
+
+export interface LoginInput {
   email: string
   password: string
 }
@@ -59,5 +77,24 @@ export interface ReviewInput {
 
 export interface ReviewResponse {
   reviews: Review[]
+  count: number
+}
+
+export interface Application {
+  _id: string
+  raceId: string
+  runnerId: string
+  runnerName: string
+  status: 'on-going' | 'cancelled'
+  appliedAt: string
+}
+
+export interface ApplicationInput {
+  runnerId: string
+  runnerName: string
+}
+
+export interface ApplicationResponse {
+  applications: Application[]
   count: number
 }

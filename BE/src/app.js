@@ -6,6 +6,7 @@ const raceRoutes = require("./routes/raceRoutes");
 const userRoutes = require("./routes/userRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/races", raceRoutes);
 app.use("/users", userRoutes);
 app.use("/ratings", ratingRoutes);
 app.use("/reviews", reviewRoutes);
+app.use("/applications", applicationRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
