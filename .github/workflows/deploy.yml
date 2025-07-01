@@ -78,12 +78,19 @@ jobs:
       - name: 📂 Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⏳ Esperar que la app esté disponible
+      - name: ⏳ Esperar que la app responda con HTTP 200
         run: |
-          until curl -s --head https://${{ secrets.VM_PUBLIC_IP }} | grep "200 OK"; do
-            echo "Esperando que la app esté lista..."
-            sleep 5
+          for i in {1..40}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" https://grupo9-proyecto.eastus.cloudapp.azure.com)
+            echo "Intento $i: código HTTP = $code"
+            if [[ "$code" == "200" ]]; then
+              echo "✅ App lista (código 200 recibido)"
+              exit 0
+            fi
+            sleep 10
           done
+          echo "❌ Timeout: la app no respondió con 200 en 30 intentos"
+          exit 1
 
       - name: 📦 Instalar dependencias del frontend
         working-directory: FE
