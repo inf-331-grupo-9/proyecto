@@ -49,7 +49,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
       await loadData(); // Reload to get updated data
     } catch (error) {
       console.error("Failed to update application status:", error);
-      alert("Failed to update application status. Please try again.");
+      alert("Error al actualizar el estado de la aplicación. Por favor intenta nuevamente.");
     }
   };
 
@@ -60,7 +60,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
       await updateMarathon(marathon._id, { ...marathon, status: 'cancelled' });
       await loadData();
     } catch (error) {
-      alert("Failed to cancel race. Please try again.");
+      alert("Error al cancelar la carrera. Por favor intenta nuevamente.");
     } finally {
       setIsCancelling(false);
     }
@@ -76,16 +76,16 @@ export default function RaceApplications({ params }: { params: { id: string } })
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'on-going': return 'On Going';
-      case 'cancelled': return 'Cancelled';
-      default: return 'On Going';
+      case 'on-going': return 'En Progreso';
+      case 'cancelled': return 'Cancelado';
+      default: return 'En Progreso';
     }
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto py-10 px-4">
-        <div className="text-center py-10">Loading applications...</div>
+        <div className="text-center py-10">Cargando aplicaciones...</div>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
         <Link href="/enterprise/dashboard">
           <Button variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Volver al Panel
           </Button>
         </Link>
       </div>
@@ -120,7 +120,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
               </div>
               <div className="flex flex-col items-end gap-2">
                 {marathon.status === 'cancelled' && (
-                  <Badge className="bg-red-100 text-red-800">Race Cancelled</Badge>
+                  <Badge className="bg-red-100 text-red-800">Carrera Cancelada</Badge>
                 )}
                 {marathon.status !== 'cancelled' && (
                   <Button
@@ -128,7 +128,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
                     onClick={handleCancelRace}
                     disabled={isCancelling}
                   >
-                    {isCancelling ? 'Cancelling...' : 'Cancel Race'}
+                    {isCancelling ? 'Cancelando...' : 'Cancelar Carrera'}
                   </Button>
                 )}
               </div>
@@ -138,9 +138,9 @@ export default function RaceApplications({ params }: { params: { id: string } })
       )}
 
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Applications ({applications.length})</h2>
+        <h2 className="text-2xl font-semibold mb-2">Aplicaciones ({applications.length})</h2>
         <p className="text-muted-foreground">
-          Manage runner applications for this race.
+          Gestiona las aplicaciones de corredores para esta carrera.
         </p>
       </div>
 
@@ -148,7 +148,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
         <Card>
           <CardContent className="text-center py-10">
             <p className="text-muted-foreground">
-              No applications have been submitted for this race yet.
+              Aún no se han enviado aplicaciones para esta carrera.
             </p>
           </CardContent>
         </Card>
@@ -163,7 +163,7 @@ export default function RaceApplications({ params }: { params: { id: string } })
                     <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
-                        Applied {new Date(application.appliedAt).toLocaleDateString()}
+                        Aplicado {new Date(application.appliedAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
@@ -175,11 +175,11 @@ export default function RaceApplications({ params }: { params: { id: string } })
               <CardContent>
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-muted-foreground">
-                    Runner ID: {application.runnerId}
+                    ID del Corredor: {application.runnerId}
                   </div>
                   {application.status === 'cancelled' && (
                     <div className="text-sm text-muted-foreground">
-                      Status updated
+                      Estado actualizado
                     </div>
                   )}
                 </div>

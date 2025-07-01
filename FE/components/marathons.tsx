@@ -202,7 +202,7 @@ export function Marathons() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-10">Loading races...</div>;
+    return <div className="text-center py-10">Cargando carreras...</div>;
   }
 
   return (
@@ -212,7 +212,7 @@ export function Marathons() {
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search races..."
+              placeholder="Buscar carreras..."
               value={searchQuery}
               onChange={handleSearch}
               className="pl-8"
@@ -222,13 +222,13 @@ export function Marathons() {
             <PopoverTrigger asChild>
               <Button variant="outline">
                 <Filter className="mr-2 h-4 w-4" />
-                Filters
+                Filtros
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location">Ubicación</Label>
                   <Input
                     id="location"
                     name="location"
@@ -237,7 +237,7 @@ export function Marathons() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dateFrom">Date From</Label>
+                  <Label htmlFor="dateFrom">Fecha Desde</Label>
                   <Input
                     id="dateFrom"
                     name="dateFrom"
@@ -247,7 +247,7 @@ export function Marathons() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dateTo">Date To</Label>
+                  <Label htmlFor="dateTo">Fecha Hasta</Label>
                   <Input
                     id="dateTo"
                     name="dateTo"
@@ -265,10 +265,10 @@ export function Marathons() {
                     }
                   >
                     <X className="mr-2 h-4 w-4" />
-                    Reset
+                    Restablecer
                   </Button>
                   <Button onClick={() => setIsFilterOpen(false)}>
-                    Apply Filters
+                    Aplicar Filtros
                   </Button>
                 </div>
               </div>
@@ -281,12 +281,12 @@ export function Marathons() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Race
+                Agregar Carrera
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px]">
               <DialogHeader>
-                <DialogTitle>Add New Race</DialogTitle>
+                <DialogTitle>Agregar Nueva Carrera</DialogTitle>
               </DialogHeader>
               <MarathonForm onSuccess={handleAddSuccess} />
             </DialogContent>
@@ -296,19 +296,19 @@ export function Marathons() {
 
       {filteredMarathons.length === 0 ? (
         <div className="text-center py-10 border rounded-md">
-          <p className="text-muted-foreground">No races found</p>
+          <p className="text-muted-foreground">No se encontraron carreras</p>
         </div>
       ) : (
         <div className="border rounded-md">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Organizer</TableHead>
-                <TableHead>Rating</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Ubicación</TableHead>
+                <TableHead>Organizador</TableHead>
+                <TableHead>Calificación</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -344,14 +344,14 @@ export function Marathons() {
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
-                        aria-label="View"
-                        name="View"
+                        aria-label="Ver"
+                        name="Ver"
                         variant="outline"
                         size="icon"
                         onClick={() => handleView(marathon)}
                       >
                         <Eye className="h-4 w-4" />
-                        <span className="sr-only">View</span>
+                        <span className="sr-only">Ver</span>
                       </Button>
                       {/* Only show edit/delete for enterprise users and their own races */}
                       {isAuthenticated() && isEnterprise() && userId && marathon.createdBy === userId && (
@@ -362,7 +362,7 @@ export function Marathons() {
                             onClick={() => handleEdit(marathon)}
                           >
                             <Pencil className="h-4 w-4" />
-                            <span className="sr-only">Edit</span>
+                            <span className="sr-only">Editar</span>
                           </Button>
                           <Button
                             variant="outline"
@@ -370,7 +370,7 @@ export function Marathons() {
                             onClick={() => handleDelete(marathon._id)}
                           >
                             <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Delete</span>
+                            <span className="sr-only">Eliminar</span>
                           </Button>
                         </>
                       )}
@@ -382,13 +382,13 @@ export function Marathons() {
                           disabled={applyingRaceId === marathon._id}
                           onClick={() => handleApply(marathon._id)}
                         >
-                          {applyingRaceId === marathon._id ? "Applying..." : "Apply"}
+                          {applyingRaceId === marathon._id ? "Aplicando..." : "Aplicar"}
                         </Button>
                       )}
                       {/* Optionally, show a disabled button if already applied */}
                       {isAuthenticated() && isRunner() && userId && hasApplied(marathon._id) && (
                         <Button variant="outline" size="sm" disabled>
-                          Applied
+                          Aplicado
                         </Button>
                       )}
                     </div>
@@ -403,7 +403,7 @@ export function Marathons() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
-            <DialogTitle>Edit Race</DialogTitle>
+            <DialogTitle>Editar Carrera</DialogTitle>
           </DialogHeader>
           {selectedMarathon && (
             <MarathonForm

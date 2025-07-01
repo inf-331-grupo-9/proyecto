@@ -74,7 +74,7 @@ export default function EnterpriseDashboard() {
       <>
         <Navbar />
         <div className="container mx-auto py-10 px-4">
-          <div className="text-center py-10">Loading your dashboard...</div>
+          <div className="text-center py-10">Cargando tu panel...</div>
         </div>
       </>
     );
@@ -85,9 +85,9 @@ export default function EnterpriseDashboard() {
       <Navbar />
       <div className="container mx-auto py-10 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Enterprise Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-2">Panel de Empresa</h1>
         <p className="text-muted-foreground">
-          Welcome back, {getUserName()}! Manage your races and applications.
+          ¡Bienvenido de vuelta, {getUserName()}! Gestiona tus carreras y aplicaciones.
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function EnterpriseDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Races</CardTitle>
+            <CardTitle className="text-sm font-medium">Total de Carreras</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -105,7 +105,7 @@ export default function EnterpriseDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Applications</CardTitle>
+            <CardTitle className="text-sm font-medium">Total de Aplicaciones</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -115,7 +115,7 @@ export default function EnterpriseDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cancelled Applications</CardTitle>
+            <CardTitle className="text-sm font-medium">Aplicaciones Canceladas</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -129,7 +129,7 @@ export default function EnterpriseDashboard() {
         <Link href="/enterprise/races/create">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            Create New Race
+            Crear Nueva Carrera
           </Button>
         </Link>
       </div>
@@ -139,16 +139,16 @@ export default function EnterpriseDashboard() {
         <Card>
           <CardContent className="text-center py-10">
             <p className="text-muted-foreground mb-4">
-              You haven't created any races yet.
+              Aún no has creado ninguna carrera.
             </p>
             <Link href="/enterprise/races/create">
-              <Button>Create Your First Race</Button>
+              <Button>Crear Tu Primera Carrera</Button>
             </Link>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold">Your Races</h2>
+          <h2 className="text-2xl font-semibold">Tus Carreras</h2>
           {marathons.map((marathon) => (
             <Card key={marathon._id}>
               <CardHeader>
@@ -167,32 +167,32 @@ export default function EnterpriseDashboard() {
                     </div>
                   </div>
                   <Badge variant="secondary">
-                    {applications[marathon._id]?.count || 0} applications
+                    {applications[marathon._id]?.count || 0} aplicaciones
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-muted-foreground">
-                    {marathon.description || "No description available"}
+                    {marathon.description || "No hay descripción disponible"}
                   </div>
                   <div className="flex gap-2">
                     <Link href={`/marathons/id/${marathon._id}`}>
                       <Button variant="outline" size="sm">
                         <Eye className="h-4 w-4 mr-2" />
-                        View
+                        Ver
                       </Button>
                     </Link>
                     <Link href={`/enterprise/races/${marathon._id}/applications`}>
                       <Button variant="outline" size="sm">
                         <Users className="h-4 w-4 mr-2" />
-                        Applications
+                        Aplicaciones
                       </Button>
                     </Link>
                     <Link href={`/enterprise/races/${marathon._id}/edit`}>
                       <Button variant="outline" size="sm">
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit
+                        Editar
                       </Button>
                     </Link>
                   </div>

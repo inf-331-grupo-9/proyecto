@@ -97,18 +97,18 @@ export function RatingDialog({
         {trigger || (
           <Button variant="outline" size="sm">
             <Star className="h-4 w-4 mr-2" />
-            {userRating ? "Edit Rating" : "Rate"}
+            {userRating ? "Editar Calificación" : "Calificar"}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle>Rate "{marathon.name}"</DialogTitle>
+          <DialogTitle>Calificar "{marathon.name}"</DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
           <div className="text-center">
             <p className="text-sm text-muted-foreground mb-4">
-              How would you rate this marathon?
+              ¿Cómo calificarías esta maratón?
             </p>
             <StarRating
               rating={currentRating}
@@ -119,7 +119,7 @@ export function RatingDialog({
             />
             {currentRating > 0 && (
               <p className="text-sm text-muted-foreground mt-2">
-                You selected {currentRating} star{currentRating !== 1 ? 's' : ''}
+                Seleccionaste {currentRating} estrella{currentRating !== 1 ? 's' : ''}
               </p>
             )}
           </div>
@@ -131,14 +131,14 @@ export function RatingDialog({
                 onClick={handleDelete}
                 disabled={isLoading}
               >
-                Remove Rating
+                Eliminar Calificación
               </Button>
             )}
             <Button
               onClick={handleSubmit}
               disabled={currentRating === 0 || isLoading}
             >
-              {isLoading ? "Saving..." : userRating ? "Update Rating" : "Submit Rating"}
+              {isLoading ? "Guardando..." : userRating ? "Actualizar Calificación" : "Enviar Calificación"}
             </Button>
           </div>
         </div>

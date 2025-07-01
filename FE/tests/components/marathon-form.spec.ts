@@ -3,66 +3,66 @@ import { test, expect } from "@playwright/test";
 test.describe("Marathon Form Component", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Add Marathon" }).click();
+    await page.getByRole("button", { name: "Agregar Carrera" }).click();
   });
 
   test("should display all form fields", async ({ page }) => {
-    await expect(page.getByLabel("Name")).toBeVisible();
-    await expect(page.getByLabel("Date")).toBeVisible();
-    await expect(page.getByLabel("Location")).toBeVisible();
-    await expect(page.getByLabel("Organizer")).toBeVisible();
-    await expect(page.getByLabel("Link")).toBeVisible();
-    await expect(page.getByLabel("Description")).toBeVisible();
+    await expect(page.getByLabel("Nombre")).toBeVisible();
+    await expect(page.getByLabel("Fecha")).toBeVisible();
+    await expect(page.getByLabel("Ubicación")).toBeVisible();
+    await expect(page.getByLabel("Organizador")).toBeVisible();
+    await expect(page.getByLabel("Enlace")).toBeVisible();
+    await expect(page.getByLabel("Descripción")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Add Marathon" })
+      page.getByRole("button", { name: "Agregar Carrera" })
     ).toBeVisible();
   });
 
   test("should validate required fields", async ({ page }) => {
-    await page.getByRole("button", { name: "Add Marathon" }).click();
+    await page.getByRole("button", { name: "Agregar Carrera" }).click();
 
-    await expect(page.getByText("Name is required")).toBeVisible();
-    await expect(page.getByText("Date is required")).toBeVisible();
-    await expect(page.getByText("Location is required")).toBeVisible();
-    await expect(page.getByText("Organizer is required")).toBeVisible();
+    await expect(page.getByText("El nombre es requerido")).toBeVisible();
+    await expect(page.getByText("La fecha es requerida")).toBeVisible();
+    await expect(page.getByText("La ubicación es requerida")).toBeVisible();
+    await expect(page.getByText("El organizador es requerido")).toBeVisible();
 
-    await page.getByLabel("Name").fill("Test Marathon");
-    await page.getByLabel("Date").fill("2023-12-31");
+    await page.getByLabel("Nombre").fill("Test Marathon");
+    await page.getByLabel("Fecha").fill("2023-12-31");
 
-    await page.getByRole("button", { name: "Add Marathon" }).click();
+    await page.getByRole("button", { name: "Agregar Carrera" }).click();
 
-    await expect(page.getByText("Name is required")).not.toBeVisible();
-    await expect(page.getByText("Date is required")).not.toBeVisible();
-    await expect(page.getByText("Location is required")).toBeVisible();
-    await expect(page.getByText("Organizer is required")).toBeVisible();
+    await expect(page.getByText("El nombre es requerido")).not.toBeVisible();
+    await expect(page.getByText("La fecha es requerida")).not.toBeVisible();
+    await expect(page.getByText("La ubicación es requerida")).toBeVisible();
+    await expect(page.getByText("El organizador es requerido")).toBeVisible();
   });
 
   test("should clear validation errors when fields are edited", async ({
     page,
   }) => {
-    await page.getByRole("button", { name: "Add Marathon" }).click();
+    await page.getByRole("button", { name: "Agregar Carrera" }).click();
 
-    await expect(page.getByText("Name is required")).toBeVisible();
+    await expect(page.getByText("El nombre es requerido")).toBeVisible();
 
-    await page.getByLabel("Name").fill("Test Marathon");
+    await page.getByLabel("Nombre").fill("Test Marathon");
 
-    await expect(page.getByText("Name is required")).not.toBeVisible();
+    await expect(page.getByText("El nombre es requerido")).not.toBeVisible();
   });
 
   test("should submit the form successfully when all required fields are filled", async ({
     page,
   }) => {
-    await page.getByLabel("Name").fill("Test Marathon");
-    await page.getByLabel("Date").fill("2023-12-31");
-    await page.getByLabel("Location").fill("Test Location");
-    await page.getByLabel("Organizer").fill("Test Organizer");
+    await page.getByLabel("Nombre").fill("Test Marathon");
+    await page.getByLabel("Fecha").fill("2023-12-31");
+    await page.getByLabel("Ubicación").fill("Test Location");
+    await page.getByLabel("Organizador").fill("Test Organizer");
 
-    await page.getByLabel("Link").fill("https://testmarathon.com");
+    await page.getByLabel("Enlace").fill("https://testmarathon.com");
     await page
-      .getByLabel("Description")
+      .getByLabel("Descripción")
       .fill("This is a test marathon description");
 
-    await page.getByRole("button", { name: "Add Marathon" }).click();
+    await page.getByRole("button", { name: "Agregar Carrera" }).click();
 
     await expect(page.getByRole("dialog")).not.toBeVisible();
 
