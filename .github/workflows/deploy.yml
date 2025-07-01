@@ -95,7 +95,7 @@ jobs:
       - name: 📦 Instalar dependencias del frontend
         working-directory: FE
         run: |
-          npm ci
+          npm install --force
           npx playwright install
 
       - name: 🚀 Ejecutar pruebas Playwright (login + home)
