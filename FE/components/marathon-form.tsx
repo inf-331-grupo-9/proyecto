@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createMarathon, updateMarathon } from "@/lib/api";
+import { getUserId, isAuthenticated, isEnterprise } from "@/lib/auth";
 import type { Marathon } from "@/lib/types";
 
 interface MarathonFormProps {
@@ -76,11 +77,24 @@ export function MarathonForm({ marathon, onSuccess }: MarathonFormProps) {
 
     try {
       let result;
-
+      
       if (marathon?._id) {
         result = await updateMarathon(marathon._id, formData);
       } else {
-        result = await createMarathon(formData);
+        // For creating new marathons, ensure user is authenticated and add createdBy field
+        if (!isAuthenticated() || !isEnterprise()) {
+          throw new Error("Only enterprise users can create marathons");
+        }
+        
+        const userId = getUserId();
+        if (!userId) {
+          throw new Error("User not found");
+        }
+        
+        result = await createMarathon({
+          ...formData,
+          createdBy: userId
+        });
       }
 
       onSuccess(result);

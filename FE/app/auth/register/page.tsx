@@ -18,6 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/auth";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "runner" as "runner" | "enterprise",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -44,6 +46,11 @@ export default function RegisterPage() {
         return newErrors;
       });
     }
+  };
+
+  const handleRoleChange = (value: "runner" | "enterprise") => {
+    setFormData((prev) => ({ ...prev, role: value }));
+    if (error) setError("");
   };
 
   const validate = () => {
@@ -89,7 +96,8 @@ export default function RegisterPage() {
       const result = await register(
         formData.name,
         formData.email,
-        formData.password
+        formData.password,
+        formData.role
       );
       if (result.success) {
         router.push("/");
@@ -112,7 +120,7 @@ export default function RegisterPage() {
             Registrarse en Runtrack
           </CardTitle>
           <CardDescription className="text-center">
-            Ingresa la información requerida para crear tu cuenta
+            Ingresa la información requerida y selecciona tu tipo de cuenta
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -153,6 +161,28 @@ export default function RegisterPage() {
               {errors.email && (
                 <p className="text-sm text-red-500">{errors.email}</p>
               )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tipo de Cuenta</Label>
+              <RadioGroup
+                value={formData.role}
+                onValueChange={handleRoleChange}
+                className="flex flex-col space-y-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="runner" id="runner" />
+                  <Label htmlFor="runner" className="text-sm font-normal">
+                    🏃‍♂️ Corredor - Aplicar a carreras y comentar
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="enterprise" id="enterprise" />
+                  <Label htmlFor="enterprise" className="text-sm font-normal">
+                    🏢 Empresa - Crear y gestionar carreras
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
 
             <div className="space-y-2">
