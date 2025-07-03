@@ -69,59 +69,63 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  playwright-tests:
-    name: Run Playwright Tests
-    runs-on: ubuntu-latest
-    needs: deploy
+  selenium-tests:
+      name: Run Selenium Tests (Python)
+      runs-on: ubuntu-latest
+      needs: deploy
 
-    steps:
-      - name: 📂 Checkout repo
-        uses: actions/checkout@v3
+      steps:
+        - name: 📂 Checkout repo
+          uses: actions/checkout@v3
 
-      - name: ⏳ Esperar que la app responda con HTTP 200
-        run: |
-          for i in {1..40}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" https://grupo9-proyecto.eastus.cloudapp.azure.com)
-            echo "Intento $i: código HTTP = $code"
-            if [[ "$code" == "200" ]]; then
-              echo "✅ App lista (código 200 recibido)"
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "❌ Timeout: la app no respondió con 200 en 30 intentos"
-          exit 1
+        - name: ⏳ Esperar que la app responda con HTTP 200
+          run: |
+            for i in {1..40}; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" https://grupo9-proyecto.eastus.cloudapp.azure.com)
+              echo "Intento $i: código HTTP = $code"
+              if [[ "$code" == "200" ]]; then
+                echo "✅ App lista (código 200 recibido)"
+                exit 0
+              fi
+              sleep 10
+            done
+            echo "❌ Timeout: la app no respondió con 200"
+            exit 1
 
-      - name: 📦 Instalar dependencias del frontend
-        working-directory: FE
-        run: |
-          npm install --force
-          npx playwright install
+        - name: 🐍 Setup Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.11'
 
-      - name: 🚀 Ejecutar pruebas Playwright (login + home)
-        working-directory: FE
-        run: |
-          TS_NODE_PROJECT=playwright.tsconfig.json npx playwright test tests/login.spec.ts
-          TS_NODE_PROJECT=playwright.tsconfig.json npx playwright test tests/home.spec.ts
+        - name: 🧪 Instalar Selenium, Pytest y ChromeDriver
+          run: |
+            pip install selenium pytest
+            sudo apt-get update
+            sudo apt-get install -y chromium-driver
+            which chromedriver
 
-      - name: ✅ Notificación Slack si éxito
-        if: success()
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload: |
-            {
-              "text": ":test_tube: *Pruebas Playwright exitosas* en `${{ github.repository }}` tras el despliegue."
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        - name: 🚀 Ejecutar prueba Selenium con Pytest
+          run: |
+            pytest tests/test_login_calif.py tests/test_empresa_create.py --maxfail=1 --disable-warnings -q
 
-      - name: ❌ Notificación Slack si falla
-        if: failure()
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload: |
-            {
-              "text": ":x: *Fallaron las pruebas Playwright* en `${{ github.repository }}` tras el despliegue."
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        - name: ✅ Notificación Slack si éxito
+          if: success()
+          uses: slackapi/slack-github-action@v1.24.0
+          with:
+            payload: |
+              {
+                "text": ":test_tube: *Prueba Selenium exitosa* en `${{ github.repository }}` tras el despliegue."
+              }
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+        - name: ❌ Notificación Slack si falla
+          if: failure()
+          uses: slackapi/slack-github-action@v1.24.0
+          with:
+            payload: |
+              {
+                "text": ":x: *Falló la prueba Selenium* en `${{ github.repository }}` tras el despliegue."
+              }
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
