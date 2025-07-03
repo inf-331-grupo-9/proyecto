@@ -13,6 +13,7 @@ class TestEmpresa:
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
+        options.binary_location = "/usr/bin/google-chrome"
         self.driver = webdriver.Chrome(options=options)
         self.driver.set_window_size(1920, 1080)
 
