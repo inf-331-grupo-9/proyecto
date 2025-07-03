@@ -106,7 +106,7 @@ jobs:
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
           run: |
-            pytest tests/test_login_calif.py tests/test_empresa_create.py --maxfail=1 --disable-warnings -q
+            pytest FE/tests/test_login_calif.py FE/tests/test_empresa_create.py --maxfail=1 --disable-warnings -q
 
         - name: ✅ Notificación Slack si éxito
           if: success()
