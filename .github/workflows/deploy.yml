@@ -100,8 +100,8 @@ jobs:
         - name: 🧱 Instalar Chrome y dependencias de Selenium
           run: |
             sudo apt-get update
-            sudo apt-get install -y chromium-browser chromium-driver
-            sudo ln -s /usr/bin/chromium-browser /usr/bin/google-chrome
+            sudo apt-get install -y chromium-browser chromium-chromedriver
+            sudo ln -sf /snap/bin/chromium /usr/bin/google-chrome
             pip install selenium pytest
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
