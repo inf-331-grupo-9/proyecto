@@ -70,11 +70,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   selenium-tests:
-      name: Run Selenium Tests (Python)
-      runs-on: ubuntu-latest
-      needs: deploy
+    name: Run Selenium Tests (Python)
+    runs-on: ubuntu-latest
+    needs: deploy
 
-      steps:
+    steps:
         - name: 📂 Checkout repo
           uses: actions/checkout@v3
 
@@ -97,12 +97,12 @@ jobs:
           with:
             python-version: '3.11'
 
-        - name: 🧪 Instalar Selenium, Pytest y ChromeDriver
+        - name: 🧱 Instalar Chrome y dependencias de Selenium
           run: |
-            pip install selenium pytest
             sudo apt-get update
-            sudo apt-get install -y chromium-driver
-            which chromedriver
+            sudo apt-get install -y chromium-browser chromium-driver
+            sudo ln -s /usr/bin/chromium-browser /usr/bin/google-chrome
+            pip install selenium pytest
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
           run: |
