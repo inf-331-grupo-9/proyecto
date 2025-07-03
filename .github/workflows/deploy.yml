@@ -97,11 +97,12 @@ jobs:
           with:
             python-version: '3.11'
 
-        - name: 🧱 Instalar Chrome y dependencias de Selenium
+        - name: 🧱 Instalar Chromium y ChromeDriver
           run: |
             sudo apt-get update
-            sudo apt-get install -y chromium-browser chromium-chromedriver
-            sudo ln -sf /snap/bin/chromium /usr/bin/google-chrome
+            sudo apt-get install -y snapd
+            sudo snap install chromium
+            sudo apt-get install -y chromium-chromedriver
             pip install selenium pytest
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
