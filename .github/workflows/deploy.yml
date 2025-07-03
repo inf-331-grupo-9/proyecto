@@ -97,13 +97,17 @@ jobs:
           with:
             python-version: '3.11'
 
-        - name: 🧱 Instalar Chromium y ChromeDriver
+        - name: 🧱 Instalar Chrome y ChromeDriver
           run: |
             sudo apt-get update
-            sudo apt-get install -y snapd
-            sudo snap install chromium
-            sudo apt-get install -y chromium-chromedriver
-            pip install selenium pytest
+            sudo apt-get install -y wget unzip
+            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt install -y ./google-chrome-stable_current_amd64.deb
+            CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+            wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip || wget https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/bin/chromedriver
+            sudo chmod +x /usr/bin/chromedriver
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
           run: |

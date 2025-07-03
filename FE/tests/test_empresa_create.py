@@ -10,11 +10,11 @@ from datetime import datetime
 class TestEmpresa:
     def setup_method(self):
         options = Options()
-        options.add_argument("--headless")
+        options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument(f"--user-data-dir=/tmp/chrome-user-data-{datetime.now().timestamp()}")
-        options.binary_location = "/snap/bin/chromium"
+        options.binary_location = "/usr/bin/google-chrome"
         self.driver = webdriver.Chrome(options=options)
         self.driver.set_window_size(1920, 1080)
 
