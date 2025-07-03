@@ -97,23 +97,15 @@ jobs:
           with:
             python-version: '3.11'
 
-        - name: 🧱 Instalar Chrome 114 y ChromeDriver 114
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y wget unzip curl
-
-            wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.198-1_amd64.deb
-            sudo apt install -y ./google-chrome-stable_114.0.5735.198-1_amd64.deb
-
-            wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
-            unzip chromedriver_linux64.zip
-            sudo mv chromedriver /usr/bin/chromedriver
-            sudo chmod +x /usr/bin/chromedriver
-
-            google-chrome --version
-            chromedriver --version
-
-            pip install selenium pytest
+        - name: ⚙️ Instalar Chrome for Testing
+          uses: browser-actions/setup-chrome@v1
+          with:
+            chrome-version: stable
+            install-chromedriver: true
+            install-dependencies: true
+          
+        - name: 🧪 Instalar dependencias Python
+          run: pip install selenium pytest
 
         - name: 🚀 Ejecutar prueba Selenium con Pytest
           run: |
