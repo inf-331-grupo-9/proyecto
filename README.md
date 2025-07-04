@@ -56,7 +56,8 @@ Esta primera entrega se enfoca en implementar un CRUD básico para las funcional
 
 ## 📚 Documentación técnica  
 Detalles completos en la [Wiki del proyecto](https://github.com/inf-331-grupo-9/proyecto/wiki)
-
+# Actulizacion-Entrega 3
+https://youtu.be/irS0Rk6lPZk
   
     
 # Licencia
